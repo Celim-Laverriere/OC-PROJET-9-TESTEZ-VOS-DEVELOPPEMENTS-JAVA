@@ -7,6 +7,9 @@ import javax.validation.ValidatorFactory;
 
 import com.dummy.myerp.business.contrat.BusinessProxy;
 import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
+import com.dummy.myerp.consumer.dao.impl.DaoProxyImpl;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 /**
@@ -21,7 +24,6 @@ public abstract class AbstractBusinessManager {
     /** Le gestionnaire de Transaction */
     private static TransactionManager transactionManager;
 
-
     // ==================== Constructeurs ====================
 
     /**
@@ -31,13 +33,14 @@ public abstract class AbstractBusinessManager {
      * @param pDaoProxy           -
      * @param pTransactionManager -
      */
-    public static void configure(BusinessProxy pBusinessProxy,
-                                 DaoProxy pDaoProxy,
+    public static void configure(BusinessProxy pBusinessProxy, DaoProxy pDaoProxy,
                                  TransactionManager pTransactionManager) {
         businessProxy = pBusinessProxy;
         daoProxy = pDaoProxy;
         transactionManager = pTransactionManager;
+
     }
+
 
 
     // ==================== Getters/Setters ====================
@@ -58,6 +61,8 @@ public abstract class AbstractBusinessManager {
      * @return {@link DaoProxy}
      */
     protected DaoProxy getDaoProxy() {
+        ApplicationContext context = new ClassPathXmlApplicationContext("/com/dummy/myerp/testbusiness/business/testContext.xml");
+        DaoProxy daoProxy = context.getBean(DaoProxy.class);
         return daoProxy;
     }
 

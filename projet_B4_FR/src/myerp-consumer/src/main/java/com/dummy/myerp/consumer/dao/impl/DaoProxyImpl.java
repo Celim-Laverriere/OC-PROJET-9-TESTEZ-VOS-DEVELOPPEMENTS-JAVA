@@ -30,7 +30,7 @@ public final class DaoProxyImpl implements DaoProxy {
     /**
      * Constructeur.
      */
-    private DaoProxyImpl() {
+    public DaoProxyImpl() {
         super();
     }
 
@@ -39,6 +39,7 @@ public final class DaoProxyImpl implements DaoProxy {
     public ComptabiliteDao getComptabiliteDao() {
         return this.comptabiliteDao;
     }
+
     public void setComptabiliteDao(ComptabiliteDao pComptabiliteDao) {
         this.comptabiliteDao = pComptabiliteDao;
     }

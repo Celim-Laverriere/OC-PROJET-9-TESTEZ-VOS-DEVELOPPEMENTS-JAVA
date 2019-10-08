@@ -1,11 +1,10 @@
-package com.dummy.myerp.testbusiness.business;
+package com.dummy.myerp.testconsumer.consumer;
 
+import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import com.dummy.myerp.business.contrat.BusinessProxy;
-import com.dummy.myerp.business.impl.TransactionManager;
 
 
 /**
@@ -23,7 +22,7 @@ public final class SpringRegistry {
 
     /** Nom des fichiers de contexte de l'application */
     private static final String CONTEXT_APPLI_LOCATION
-        = "classpath:/com/dummy/myerp/testbusiness/business/testContext.xml";
+        = "classpath:/com/dummy/myerp/testconsumer/consumer/testContext.xml";
 
     /** Le context spring de l'application */
     private ApplicationContext contextAppli;
@@ -76,21 +75,12 @@ public final class SpringRegistry {
 
 
     /**
-     * Renvoie l'instance de {@link BusinessProxy} de l'application
+     * Renvoie l'instance de {@link DaoProxy} de l'application
      *
-     * @return {@link BusinessProxy}
+     * @return {@link DaoProxy}
      */
-    public static BusinessProxy getBusinessProxy() {
-        return (BusinessProxy) SpringRegistry.getBean("BusinessProxy");
+    public static DaoProxy  getDaoProxy() {
+        return (DaoProxy ) SpringRegistry.getBean("DaoProxy");
     }
 
-
-    /**
-     * Renvoie l'instance de {@link TransactionManager} de l'application
-     *
-     * @return {@link TransactionManager}
-     */
-    public static TransactionManager getTransactionManager() {
-        return (TransactionManager) SpringRegistry.getBean("TransactionManager");
-    }
 }
