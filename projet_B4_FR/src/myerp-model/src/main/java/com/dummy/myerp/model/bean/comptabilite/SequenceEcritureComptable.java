@@ -39,6 +39,7 @@ public class SequenceEcritureComptable {
     public Integer getAnnee() {
         return annee;
     }
+
     public void setAnnee(Integer pAnnee) {
         annee = pAnnee;
     }
@@ -46,6 +47,7 @@ public class SequenceEcritureComptable {
     public Integer getDerniereValeur() {
         return derniereValeur;
     }
+
     public void setDerniereValeur(Integer pDerniereValeur) {
         derniereValeur = pDerniereValeur;
     }

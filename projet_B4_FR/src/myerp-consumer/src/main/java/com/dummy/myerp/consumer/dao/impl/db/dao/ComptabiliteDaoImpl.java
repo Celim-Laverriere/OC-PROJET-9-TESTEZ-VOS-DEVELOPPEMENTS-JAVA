@@ -272,22 +272,81 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
      * (table sequence_ecriture_comptable)
      */
     @Override
-    public SequenceEcritureComptable getLastValueSequenceEcritureComptableforYear(Integer pAnnee) throws NotFoundException {
+    public SequenceEcritureComptable getLastValueSequenceEcritureComptableforYear(String pJournalCode, Integer pAnnee) throws NotFoundException {
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
+        vSqlParams.addValue("journal_code", pJournalCode);
         vSqlParams.addValue("annee", pAnnee);
         SequenceEcritureComptableRM vRM = new SequenceEcritureComptableRM();
         SequenceEcritureComptable vBean;
 
-        System.out.println(pAnnee);
-
         try {
             vBean = vJdbcTemplate.queryForObject(SQLgetLastValueSequenceEcritureComptableForYear, vSqlParams, vRM);
         } catch (EmptyResultDataAccessException vEx) {
-            throw new NotFoundException("EcritureComptable non trouvée : reference =" + pAnnee);
+            throw new NotFoundException("SequenceEcritureComptable non trouvée : année = " + pAnnee);
         }
         return vBean;
     }
 
+    /** SQLinsertSequenceEcritureComptable */
+    private static String SQLinsertSequenceEcritureComptable;
+    public void setSQLinsertSequenceEcritureComptable(String pSqLinsertSequenceEcritureComptable) {
+        SQLinsertSequenceEcritureComptable = pSqLinsertSequenceEcritureComptable;
+    }
+    /**
+     * Insert une nouvelle séquence d'écriture comptable.
+     * @param pSequenceEcritureComptable -
+     */
+    @Override
+    public void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) {
+        NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
+        MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
+
+        vSqlParams.addValue("journal_code", pSequenceEcritureComptable.getJournalCode());
+        vSqlParams.addValue("annee", pSequenceEcritureComptable.getAnnee());
+        vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
+
+        vJdbcTemplate.update(SQLinsertSequenceEcritureComptable, vSqlParams);
+
+    }
+
+    /** SQLupdateSequenceEcritureComptable */
+    private static  String SQLupdateSequenceEcritureComptable;
+    public void setSQLupdateSequenceEcritureComptable(String pSqLupdateSequenceEcritureComptable) {
+        SQLupdateSequenceEcritureComptable = pSqLupdateSequenceEcritureComptable;
+    }
+    /**
+     * Met à jour la valeur de la séquence.
+     * @param pSequenceEcritureComptable -
+     */
+    @Override
+    public void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) {
+        NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
+        MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
+
+        vSqlParams.addValue("journal_code", pSequenceEcritureComptable.getJournalCode());
+        vSqlParams.addValue("annee", pSequenceEcritureComptable.getAnnee());
+        vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
+
+        vJdbcTemplate.update(SQLupdateSequenceEcritureComptable, vSqlParams);
+    }
+
+    /** SQLgetLastOneEcritureComptable */
+    private static  String SQLgetLastOneEcritureComptable;
+    public void setSQLgetLastOneEcritureComptable(String pSqLgetLastOneEcritureComptable) {
+        SQLgetLastOneEcritureComptable = pSqLgetLastOneEcritureComptable;
+    }
+
+    /**
+     * Remonter depuis la persitance la dernière écriture comptable
+     * (table ecriture_comptable)
+     */
+    @Override
+    public EcritureComptable getLastOneEcritureComptable() {
+        NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
+        EcritureComptableRM vRM = new EcritureComptableRM();
+        List<EcritureComptable> ecritureComptableList = vJdbcTemplate.query(SQLgetLastOneEcritureComptable, vRM);
+        return ecritureComptableList.get(0);
+    }
 
 }

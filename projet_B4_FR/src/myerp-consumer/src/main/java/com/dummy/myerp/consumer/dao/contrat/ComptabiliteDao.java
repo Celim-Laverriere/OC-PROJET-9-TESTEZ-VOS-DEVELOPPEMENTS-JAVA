@@ -86,5 +86,25 @@ public interface ComptabiliteDao {
      * Remonter depuis la persitance la dernière valeur de la séquence du journal pour l'année de l'écriture
      * (table sequence_ecriture_comptable)
      */
-    SequenceEcritureComptable getLastValueSequenceEcritureComptableforYear(Integer annee) throws NotFoundException;
+    SequenceEcritureComptable getLastValueSequenceEcritureComptableforYear(String pJournalCode, Integer annee) throws NotFoundException;
+
+    /**
+     * Insert une nouvelle séquence d'écriture comptable.
+     *
+     * @param pSequenceEcritureComptable -
+     */
+    void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable);
+
+    /**
+     * Met à jour la valeur de la séquence.
+     *
+     * @param pSequenceEcritureComptable -
+     */
+    void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable);
+
+    /**
+     * Remonter depuis la persitance la dernière écriture comptable
+     * (table ecriture_comptable)
+     */
+    EcritureComptable getLastOneEcritureComptable();
 }

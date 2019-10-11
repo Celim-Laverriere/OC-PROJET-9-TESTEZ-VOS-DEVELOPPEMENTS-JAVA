@@ -23,6 +23,8 @@ public abstract class AbstractBusinessManager {
     private static DaoProxy daoProxy;
     /** Le gestionnaire de Transaction */
     private static TransactionManager transactionManager;
+    /** ApplicationContext */
+    private static ApplicationContext context = new ClassPathXmlApplicationContext("/com/dummy/myerp/testbusiness/business/testContext.xml");
 
     // ==================== Constructeurs ====================
 
@@ -40,7 +42,6 @@ public abstract class AbstractBusinessManager {
         transactionManager = pTransactionManager;
 
     }
-
 
 
     // ==================== Getters/Setters ====================
@@ -61,8 +62,6 @@ public abstract class AbstractBusinessManager {
      * @return {@link DaoProxy}
      */
     protected DaoProxy getDaoProxy() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("/com/dummy/myerp/testbusiness/business/testContext.xml");
-        DaoProxy daoProxy = context.getBean(DaoProxy.class);
         return daoProxy;
     }
 
