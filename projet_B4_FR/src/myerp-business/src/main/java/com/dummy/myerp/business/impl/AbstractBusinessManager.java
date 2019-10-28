@@ -24,7 +24,6 @@ public abstract class AbstractBusinessManager {
     /** Le gestionnaire de Transaction */
     private static TransactionManager transactionManager;
     /** ApplicationContext */
-    private static ApplicationContext context = new ClassPathXmlApplicationContext("/com/dummy/myerp/testbusiness/business/testContext.xml");
 
     // ==================== Constructeurs ====================
 

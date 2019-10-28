@@ -138,7 +138,9 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
         vSqlParams.addValue("ecriture_id", pEcritureComptable.getId());
         LigneEcritureComptableRM vRM = new LigneEcritureComptableRM();
+
         List<LigneEcritureComptable> vList = vJdbcTemplate.query(SQLloadListLigneEcriture, vSqlParams, vRM);
+
         pEcritureComptable.getListLigneEcriture().clear();
         pEcritureComptable.getListLigneEcriture().addAll(vList);
     }
@@ -164,8 +166,8 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         vJdbcTemplate.update(SQLinsertEcritureComptable, vSqlParams);
 
         // ----- Récupération de l'id
-        Integer vId = this.queryGetSequenceValuePostgreSQL(DataSourcesEnum.MYERP, "myerp.ecriture_comptable_id_seq",
-                                                           Integer.class);
+        Integer vId = this.queryGetSequenceValuePostgreSQL(DataSourcesEnum.MYERP,
+                "myerp.ecriture_comptable_id_seq", Integer.class);
         pEcritureComptable.setId(vId);
 
         // ===== Liste des lignes d'écriture
@@ -193,7 +195,6 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
             vSqlParams.addValue("compte_comptable_numero", vLigne.getCompteComptable().getNumero());
             vSqlParams.addValue("libelle", vLigne.getLibelle());
             vSqlParams.addValue("debit", vLigne.getDebit());
-
             vSqlParams.addValue("credit", vLigne.getCredit());
 
             vJdbcTemplate.update(SQLinsertListLigneEcritureComptable, vSqlParams);
@@ -336,7 +337,6 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
     public void setSQLgetLastOneEcritureComptable(String pSqLgetLastOneEcritureComptable) {
         SQLgetLastOneEcritureComptable = pSqLgetLastOneEcritureComptable;
     }
-
     /**
      * Remonter depuis la persitance la dernière écriture comptable
      * (table ecriture_comptable)
