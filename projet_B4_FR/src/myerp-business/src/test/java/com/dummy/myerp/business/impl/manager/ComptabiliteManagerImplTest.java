@@ -2,7 +2,6 @@ package com.dummy.myerp.business.impl.manager;
 
 import java.math.BigDecimal;
 import java.util.Date;
-
 import com.dummy.myerp.business.impl.AbstractBusinessManager;
 import com.dummy.myerp.business.impl.TransactionManager;
 import com.dummy.myerp.consumer.dao.contrat.ComptabiliteDao;
@@ -19,8 +18,8 @@ import static org.mockito.Mockito.when;
 
 public class ComptabiliteManagerImplTest {
 
-
     private ComptabiliteManagerImpl manager = new ComptabiliteManagerImpl();
+
 
     @Test
     public void checkEcritureComptableUnit() throws Exception {
