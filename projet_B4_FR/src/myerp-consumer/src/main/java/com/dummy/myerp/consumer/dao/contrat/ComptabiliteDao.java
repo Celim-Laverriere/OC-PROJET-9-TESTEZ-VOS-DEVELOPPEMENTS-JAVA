@@ -93,14 +93,14 @@ public interface ComptabiliteDao {
      *
      * @param pSequenceEcritureComptable -
      */
-    void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable);
+    void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) throws NotFoundException;
 
     /**
      * Met à jour la valeur de la séquence.
      *
      * @param pSequenceEcritureComptable -
      */
-    void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable);
+    void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) throws NotFoundException;
 
     /**
      * Remonter depuis la persitance la dernière écriture comptable

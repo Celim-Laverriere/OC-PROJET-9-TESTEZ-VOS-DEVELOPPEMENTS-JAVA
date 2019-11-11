@@ -82,11 +82,19 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                     getLastValueSequenceEcritureComptableforYear(pEcritureComptable.getJournal().getCode(), currentYear);
 
             if(currentYear.equals(sequenceEcritureComptable.getAnnee())){
-
                 // Mise à jour de la dernière valeur augmentée de 1 d'écriture Comptable
                 sequenceEcritureComptable.setDerniereValeur(sequenceEcritureComptable.getDerniereValeur() + 1);
-                // Enregistrer (update) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
-                getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(sequenceEcritureComptable);
+
+                TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
+
+                try {
+                    // Enregistrer (update) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
+                    getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(sequenceEcritureComptable);
+                    getTransactionManager().commitMyERP(vTS);
+                    vTS = null;
+                } finally {
+                    getTransactionManager().rollbackMyERP(vTS);
+                }
 
                 // Appel de la classe formatageReference() pour formater la référence selon le RG_Compta_5
                 pEcritureComptable.setReference(formatageReference(sequenceEcritureComptable));
@@ -105,8 +113,15 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             sequenceEcritureComptable.setAnnee(currentYear);
             sequenceEcritureComptable.setDerniereValeur(1);
 
-            // Enregistrer (insert) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
-            getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(sequenceEcritureComptable);
+            TransactionStatus vTs = getTransactionManager().beginTransactionMyERP();
+            try {
+                // Enregistrer (insert) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
+                getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(sequenceEcritureComptable);
+                getTransactionManager().commitMyERP(vTs);
+                vTs = null;
+            } finally {
+                getTransactionManager().rollbackMyERP(vTs);
+            }
 
             // Appel la classe formatageReference() pour formater la référence selon le RG_Compta_5
             pEcritureComptable.setReference(formatageReference(sequenceEcritureComptable));

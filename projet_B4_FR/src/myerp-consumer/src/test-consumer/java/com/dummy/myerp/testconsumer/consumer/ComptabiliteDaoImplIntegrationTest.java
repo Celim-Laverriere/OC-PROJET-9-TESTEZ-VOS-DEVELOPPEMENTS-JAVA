@@ -13,7 +13,6 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
 
     private ComptabiliteDaoImpl comptabiliteDao = ComptabiliteDaoImpl.getInstance();
 
-
     @Test
     public void checkGetListCompteComptable() {
         List<CompteComptable> compteComptableList = comptabiliteDao.getListCompteComptable();
@@ -33,12 +32,12 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     }
 
     @Test
-    public void checkGetEcritureComptablee() throws NotFoundException {
+    public void checkGetEcritureComptable() throws NotFoundException {
        EcritureComptable ecritureComptable = comptabiliteDao.getEcritureComptable(-1);
        Assertions.assertThat(ecritureComptable.getId()).isEqualTo(-1);
        Assertions.assertThat(ecritureComptable.getJournal().getCode()).isEqualTo("AC");
        Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("AC-2016/00001");
-       Assertions.assertThat(ecritureComptable.getDate()).isEqualTo("2019-10-28 00:00:00.000000");
+       Assertions.assertThat(ecritureComptable.getDate()).isEqualTo("2016-12-31 00:00:00.000000");
        Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("Cartouches d’imprimante");
     }
 
@@ -47,6 +46,7 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         EcritureComptable vEcritureComptable = comptabiliteDao.getEcritureComptableByRef("BQ-2016/00005");
         Assertions.assertThat(vEcritureComptable.getId()).isEqualTo(-5);
         Assertions.assertThat(vEcritureComptable.getListLigneEcriture()).isNotEmpty();
+        Assertions.assertThat(vEcritureComptable.getListLigneEcriture().size() > 1);
     }
 
     @Test
@@ -66,32 +66,37 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         comptabiliteDao.insertEcritureComptable(vEcritureComptable);
         Assertions.assertThat(vEcritureComptable.getId()).isEqualTo(vEcritureComptable.getId());
         Assertions.assertThat(vEcritureComptable.getListLigneEcriture()).isNotEmpty();
+        Assertions.assertThat(vEcritureComptable.getListLigneEcriture().size() > 1);
     }
 
     @Test
-    public void checkUpdateEcritureComptable() {
+    public void checkUpdateEcritureComptable() throws NotFoundException {
         EcritureComptable vEcritureComptable = new EcritureComptable();
-        vEcritureComptable.setId(28);
+        vEcritureComptable.setId(22);
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
-        vEcritureComptable.setReference("AC-2019/00007");
+        vEcritureComptable.setReference("AC-2019/00006");
         vEcritureComptable.setDate(new Date());
-        vEcritureComptable.setLibelle("Ordinateurs");
+        vEcritureComptable.setLibelle("Portable");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(512),
-                                                                            "Clients", new BigDecimal(550),
+                                                                            "Clients", new BigDecimal(800),
                                                                             null));
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
                                                                                         "Banque", null,
-                                                                                        new BigDecimal(550)));
-
+                                                                                        new BigDecimal(800)));
         comptabiliteDao.updateEcritureComptable(vEcritureComptable);
+
+        EcritureComptable v2EcritureComptable = comptabiliteDao.getEcritureComptable(22);
+        Assertions.assertThat(v2EcritureComptable.getLibelle()).isEqualTo("Portable");
+        Assertions.assertThat(vEcritureComptable.getListLigneEcriture()).isNotEmpty();
+        Assertions.assertThat(vEcritureComptable.getListLigneEcriture().size() > 1);
+        Assertions.assertThat(v2EcritureComptable.getListLigneEcriture().contains(800));
     }
 
     @Test(expected = NotFoundException.class)
     public void checkDeleteEcritureComptable() throws NotFoundException {
         Integer pId = 28;
-
         comptabiliteDao.deleteEcritureComptable(pId);
-        Assertions.assertThat( comptabiliteDao.getEcritureComptable(28)).isEqualTo(null);
+        Assertions.assertThat(comptabiliteDao.getEcritureComptable(28)).isEqualTo(null);
     }
 
     @Test
@@ -100,5 +105,71 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
                 getLastValueSequenceEcritureComptableforYear("AC", 2016);
 
         Assertions.assertThat(sequenceEcritureComptable.getDerniereValeur()).isEqualTo(40);
+    }
+
+    @Test
+    public void checkInsertSequenceEcritureComptableNominal() throws NotFoundException {
+        SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
+        vSequenceEcritureComptable.setJournalCode("AC");
+        vSequenceEcritureComptable.setAnnee(2019);
+        vSequenceEcritureComptable.setDerniereValeur(1);
+
+        comptabiliteDao.insertSequenceEcritureComptable(vSequenceEcritureComptable);
+
+        SequenceEcritureComptable v2SequenceEcritureComptable = comptabiliteDao.
+                getLastValueSequenceEcritureComptableforYear("AC", 2019);
+        Assertions.assertThat(v2SequenceEcritureComptable.getDerniereValeur()).isEqualTo(1);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void checkInsertSequenceEcritureComptable() throws NotFoundException{
+        SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
+        vSequenceEcritureComptable.setJournalCode("AC");
+        vSequenceEcritureComptable.setAnnee(2019);
+        vSequenceEcritureComptable.setDerniereValeur(1);
+
+        comptabiliteDao.insertSequenceEcritureComptable(vSequenceEcritureComptable);
+    }
+
+    @Test
+    public void checkUpdateSequenceEcritureComptableNominal() throws NotFoundException {
+        SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
+        vSequenceEcritureComptable.setJournalCode("AC");
+        vSequenceEcritureComptable.setAnnee(2019);
+        vSequenceEcritureComptable.setDerniereValeur(2);
+
+        comptabiliteDao.updateSequenceEcritureComptable(vSequenceEcritureComptable);
+        SequenceEcritureComptable v2SequenceEcritureComptable = comptabiliteDao.
+                getLastValueSequenceEcritureComptableforYear("AC", 2019);
+        Assertions.assertThat(v2SequenceEcritureComptable.getDerniereValeur()).isEqualTo(2);
+
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void checkUpdateSequenceEcritureComptable() throws NotFoundException {
+        SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
+        vSequenceEcritureComptable.setJournalCode("AC");
+        vSequenceEcritureComptable.setAnnee(2020);
+        vSequenceEcritureComptable.setDerniereValeur(2);
+
+        comptabiliteDao.updateSequenceEcritureComptable(vSequenceEcritureComptable);
+    }
+
+    @Test
+    public void checkGetLastOneEcritureComptable() {
+        EcritureComptable vEcritureComptable = comptabiliteDao.getLastOneEcritureComptable();
+        Assertions.assertThat(vEcritureComptable.getId()).isEqualTo(-5);
+
+        BigDecimal vRetour = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        vRetour = vRetour.add(new BigDecimal(3000));
+
+        for (LigneEcritureComptable ligneEcritureComptable : vEcritureComptable.getListLigneEcriture()) {
+            if (ligneEcritureComptable.getDebit() != null) {
+                Assertions.assertThat(ligneEcritureComptable.getDebit()).isEqualTo(vRetour);
+            }
+            if (ligneEcritureComptable.getCredit() != null) {
+                Assertions.assertThat(ligneEcritureComptable.getCredit()).isEqualTo(vRetour);
+            }
+        }
     }
 }

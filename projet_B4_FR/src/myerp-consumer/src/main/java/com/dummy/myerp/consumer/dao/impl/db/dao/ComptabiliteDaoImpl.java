@@ -284,7 +284,8 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         try {
             vBean = vJdbcTemplate.queryForObject(SQLgetLastValueSequenceEcritureComptableForYear, vSqlParams, vRM);
         } catch (EmptyResultDataAccessException vEx) {
-            throw new NotFoundException("SequenceEcritureComptable non trouvée : année = " + pAnnee);
+            throw new NotFoundException("La séquence écriture comptable demandée n'a pas été trouvée pour année "
+                    + pAnnee);
         }
         return vBean;
     }
@@ -299,7 +300,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
      * @param pSequenceEcritureComptable -
      */
     @Override
-    public void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) {
+    public void insertSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) throws NotFoundException{
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
 
@@ -307,7 +308,12 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         vSqlParams.addValue("annee", pSequenceEcritureComptable.getAnnee());
         vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
 
-        vJdbcTemplate.update(SQLinsertSequenceEcritureComptable, vSqlParams);
+        try {
+            vJdbcTemplate.update(SQLinsertSequenceEcritureComptable, vSqlParams);
+        } catch (Exception vEX) {
+            throw new NotFoundException("La séquence d'écriture comptable existe déjà!");
+        }
+
 
     }
 
@@ -321,7 +327,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
      * @param pSequenceEcritureComptable -
      */
     @Override
-    public void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) {
+    public void updateSequenceEcritureComptable(SequenceEcritureComptable pSequenceEcritureComptable) throws NotFoundException {
         NamedParameterJdbcTemplate vJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource(DataSourcesEnum.MYERP));
         MapSqlParameterSource vSqlParams = new MapSqlParameterSource();
 
@@ -329,7 +335,17 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         vSqlParams.addValue("annee", pSequenceEcritureComptable.getAnnee());
         vSqlParams.addValue("derniere_valeur", pSequenceEcritureComptable.getDerniereValeur());
 
-        vJdbcTemplate.update(SQLupdateSequenceEcritureComptable, vSqlParams);
+        try {
+            /* On vérifie en premier si la séquence de l'écriture comptable existe, si oui on met à jour l'écriture,
+               sinon le catch se déclenche. */
+            getLastValueSequenceEcritureComptableforYear(pSequenceEcritureComptable.getJournalCode(),
+                    pSequenceEcritureComptable.getAnnee());
+            vJdbcTemplate.update(SQLupdateSequenceEcritureComptable, vSqlParams);
+        } catch (Exception vEX) {
+            throw new NotFoundException("Mise à jour impossible, la séquence écriture comptable demandée " +
+                    "n'a pas été trouvée !");
+        }
+
     }
 
     /** SQLgetLastOneEcritureComptable */

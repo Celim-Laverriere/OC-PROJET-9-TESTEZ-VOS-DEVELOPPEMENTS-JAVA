@@ -38,22 +38,6 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     }
 
     @Test
-    public void checkEcritureComptable() throws FunctionalException {
-        EcritureComptable vEcritureComptable = new EcritureComptable();
-        vEcritureComptable.setJournal(new JournalComptable("AC", "Vente"));
-        vEcritureComptable.setReference("AC-2019/00006");
-        vEcritureComptable.setDate(new Date());
-        vEcritureComptable.setLibelle("TMA Appli Yyy");
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
-                                                                                null, new BigDecimal(123),
-                                                                                null));
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(706),
-                                                                                            null, null,
-                                                                                            new BigDecimal(123)));
-        manager.checkEcritureComptable(vEcritureComptable);
-    }
-
-    @Test
     public void checkInsertEcritureComptableNominal() throws FunctionalException {
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("VE", "Vente"));
@@ -172,8 +156,14 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
 
     @Test
     public void checkdeleteEcritureComptable() {
-        Integer pId = 17;
+        Integer pId = 1;
         manager.deleteEcritureComptable(pId);
+
+        List<EcritureComptable> ecritureComptableList = manager.getListEcritureComptable();
+
+        for (EcritureComptable ecritureComptable : ecritureComptableList) {
+            Assertions.assertThat(ecritureComptable.getId()).isNotEqualTo(1);
+        }
     }
 
 
