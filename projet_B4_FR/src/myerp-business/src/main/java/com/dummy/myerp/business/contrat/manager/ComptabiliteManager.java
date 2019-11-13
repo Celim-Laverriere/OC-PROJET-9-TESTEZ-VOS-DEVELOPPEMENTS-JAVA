@@ -59,7 +59,7 @@ public interface ComptabiliteManager {
      * @param pEcritureComptable -
      * @throws FunctionalException Si l'Ecriture comptable ne respecte pas les règles de gestion
      */
-    void checkEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException;
+    void checkEcritureComptable(EcritureComptable pEcritureComptable) throws FunctionalException, NotFoundException;
 
     /**
      * Insert une nouvelle écriture comptable.

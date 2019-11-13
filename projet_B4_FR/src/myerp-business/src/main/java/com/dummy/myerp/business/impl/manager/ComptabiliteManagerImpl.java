@@ -114,6 +114,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             sequenceEcritureComptable.setDerniereValeur(1);
 
             TransactionStatus vTs = getTransactionManager().beginTransactionMyERP();
+
             try {
                 // Enregistrer (insert) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
                 getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(sequenceEcritureComptable);
@@ -224,11 +225,9 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         // ===== RG_Compta_6 : La référence d'une écriture comptable doit être unique
         if (StringUtils.isNoneEmpty(pEcritureComptable.getReference())) {
 
-            EcritureComptable vECRef = new EcritureComptable();
-
             try {
                 // Recherche d'une écriture ayant la même référence
-                vECRef = getDaoProxy().getComptabiliteDao().getEcritureComptableByRef(
+                EcritureComptable vECRef = getDaoProxy().getComptabiliteDao().getEcritureComptableByRef(
                         pEcritureComptable.getReference());
 
                 // Si l'écriture à vérifier est une nouvelle écriture (id == null),
@@ -243,7 +242,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 // Dans ce cas, c'est bon, ça veut dire qu'on n'a aucune autre écriture avec la même référence.
                 // Si l'écriture à vérifier est une mise à jour (id != null)
                 // et si aucune écriture n'est trouvé (référence == null)
-                if (pEcritureComptable.getId() != null && vECRef.getReference() == null) {
+                if(pEcritureComptable.getId() != null) {
                     throw new FunctionalException("Aucune écriture comptable existe pour cette référence.");
                 }
             }

@@ -18,7 +18,6 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
 
     private ComptabiliteManagerImpl manager = new ComptabiliteManagerImpl();
 
-
     @Test
     public void checkGetListCompteComptable() {
         List<CompteComptable> compteComptableList = manager.getListCompteComptable();
@@ -99,11 +98,18 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
 
     @Test
     public void checkUpdateEcritureComptableNominal() throws FunctionalException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
+        String date = "2016-12-31";
+
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setId(-1);
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
-        vEcritureComptable.setDate(new Date());
-        vEcritureComptable.setReference("AC-2019/00001");
+        try {
+            vEcritureComptable.setDate(simpleDateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        vEcritureComptable.setReference("AC-2016/00001");
         vEcritureComptable.setLibelle("Imprimante");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
                                                                                 null, new BigDecimal(250),
@@ -122,7 +128,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
 
             if (ecritureComptable.getId().equals(-1)) {
                 Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("Imprimante");
-                Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("AC-2019/00001");
+                Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("AC-2016/00001");
 
                 for (LigneEcritureComptable ligneEcritureComptable : ecritureComptable.getListLigneEcriture()) {
                     if (ligneEcritureComptable.getCredit() != null){

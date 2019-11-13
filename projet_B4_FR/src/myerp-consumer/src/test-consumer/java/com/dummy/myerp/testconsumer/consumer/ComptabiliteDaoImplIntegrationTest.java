@@ -33,12 +33,12 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
 
     @Test
     public void checkGetEcritureComptable() throws NotFoundException {
-       EcritureComptable ecritureComptable = comptabiliteDao.getEcritureComptable(-1);
-       Assertions.assertThat(ecritureComptable.getId()).isEqualTo(-1);
-       Assertions.assertThat(ecritureComptable.getJournal().getCode()).isEqualTo("AC");
-       Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("AC-2016/00001");
-       Assertions.assertThat(ecritureComptable.getDate()).isEqualTo("2016-12-31 00:00:00.000000");
-       Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("Cartouches d’imprimante");
+       EcritureComptable ecritureComptable = comptabiliteDao.getEcritureComptable(-2);
+       Assertions.assertThat(ecritureComptable.getId()).isEqualTo(-2);
+       Assertions.assertThat(ecritureComptable.getJournal().getCode()).isEqualTo("VE");
+       Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("VE-2016/00002");
+       Assertions.assertThat(ecritureComptable.getDate()).isEqualTo("2016-12-30 00:00:00.000000");
+       Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("TMA Appli Xxx");
     }
 
     @Test
@@ -72,7 +72,7 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     @Test
     public void checkUpdateEcritureComptable() throws NotFoundException {
         EcritureComptable vEcritureComptable = new EcritureComptable();
-        vEcritureComptable.setId(22);
+        vEcritureComptable.setId(-1);
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
         vEcritureComptable.setReference("AC-2019/00006");
         vEcritureComptable.setDate(new Date());
@@ -85,7 +85,7 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
                                                                                         new BigDecimal(800)));
         comptabiliteDao.updateEcritureComptable(vEcritureComptable);
 
-        EcritureComptable v2EcritureComptable = comptabiliteDao.getEcritureComptable(22);
+        EcritureComptable v2EcritureComptable = comptabiliteDao.getEcritureComptable(-1);
         Assertions.assertThat(v2EcritureComptable.getLibelle()).isEqualTo("Portable");
         Assertions.assertThat(vEcritureComptable.getListLigneEcriture()).isNotEmpty();
         Assertions.assertThat(vEcritureComptable.getListLigneEcriture().size() > 1);
