@@ -99,17 +99,17 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     @Test
     public void checkUpdateEcritureComptableNominal() throws FunctionalException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
-        String date = "2016-12-31";
+        String date = "2016-12-30";
 
         EcritureComptable vEcritureComptable = new EcritureComptable();
-        vEcritureComptable.setId(-1);
-        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setId(-2);
+        vEcritureComptable.setJournal(new JournalComptable("VE", "Vente"));
         try {
             vEcritureComptable.setDate(simpleDateFormat.parse(date));
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        vEcritureComptable.setReference("AC-2016/00001");
+        vEcritureComptable.setReference("VE-2016/00002");
         vEcritureComptable.setLibelle("Imprimante");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
                                                                                 null, new BigDecimal(250),
@@ -126,9 +126,9 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
 
         for (EcritureComptable ecritureComptable : ecritureComptableList) {
 
-            if (ecritureComptable.getId().equals(-1)) {
+            if (ecritureComptable.getId().equals(-2)) {
                 Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("Imprimante");
-                Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("AC-2016/00001");
+                Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("VE-2016/00002");
 
                 for (LigneEcritureComptable ligneEcritureComptable : ecritureComptable.getListLigneEcriture()) {
                     if (ligneEcritureComptable.getCredit() != null){
