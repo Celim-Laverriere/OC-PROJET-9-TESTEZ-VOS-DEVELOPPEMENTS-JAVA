@@ -33,20 +33,25 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
 
     @Test
     public void checkGetEcritureComptable() throws NotFoundException {
-       EcritureComptable ecritureComptable = comptabiliteDao.getEcritureComptable(-2);
-       Assertions.assertThat(ecritureComptable.getId()).isEqualTo(-2);
+       EcritureComptable ecritureComptable = comptabiliteDao.getEcritureComptable(-4);
+       Assertions.assertThat(ecritureComptable.getId()).isEqualTo(-4);
        Assertions.assertThat(ecritureComptable.getJournal().getCode()).isEqualTo("VE");
-       Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("VE-2016/00002");
-       Assertions.assertThat(ecritureComptable.getDate()).isEqualTo("2016-12-30 00:00:00.000000");
-       Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("TMA Appli Xxx");
+       Assertions.assertThat(ecritureComptable.getReference()).isEqualTo("VE-2016/00004");
+       Assertions.assertThat(ecritureComptable.getDate()).isEqualTo("2016-12-28 00:00:00.000000");
+       Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("TMA Appli Yyy");
     }
 
     @Test
-    public void checkGetEcritureComptableByRef() throws NotFoundException {
+    public void checkGetEcritureComptableByRefNominal() throws NotFoundException {
         EcritureComptable vEcritureComptable = comptabiliteDao.getEcritureComptableByRef("BQ-2016/00005");
         Assertions.assertThat(vEcritureComptable.getId()).isEqualTo(-5);
         Assertions.assertThat(vEcritureComptable.getListLigneEcriture()).isNotEmpty();
         Assertions.assertThat(vEcritureComptable.getListLigneEcriture().size() > 1);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void checkGetEcritureComptableByRef() throws NotFoundException {
+        EcritureComptable vEcritureComptable = comptabiliteDao.getEcritureComptableByRef("DE-2016/00005");
     }
 
     @Test

@@ -193,6 +193,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         if (pEcritureComptable.getListLigneEcriture().size() < 2
                 || vNbrCredit < 1
                 || vNbrDebit < 1) {
+            System.out.println("Coucou le test !");
             throw new FunctionalException(
                     "L'écriture comptable doit avoir au moins deux lignes : une ligne au débit et une ligne au crédit.");
         }

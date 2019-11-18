@@ -220,12 +220,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         vSqlParams.addValue("date", pEcritureComptable.getDate(), Types.DATE);
         vSqlParams.addValue("libelle", pEcritureComptable.getLibelle());
 
-        try {
-            vJdbcTemplate.update(SQLupdateEcritureComptable, vSqlParams);
-        } catch (Exception pEX) {
-
-        }
-
+        vJdbcTemplate.update(SQLupdateEcritureComptable, vSqlParams);
 
         // ===== Liste des lignes d'écriture
         this.deleteListLigneEcritureComptable(pEcritureComptable.getId());
