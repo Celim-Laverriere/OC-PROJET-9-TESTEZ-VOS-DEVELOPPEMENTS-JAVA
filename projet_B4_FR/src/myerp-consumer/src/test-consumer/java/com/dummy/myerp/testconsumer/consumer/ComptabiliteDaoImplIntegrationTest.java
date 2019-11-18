@@ -58,7 +58,7 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     public void checkInsertEcritureComptable() {
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
-        vEcritureComptable.setReference("AC-2019/00006");
+        vEcritureComptable.setReference("AC-2019/00007");
         vEcritureComptable.setDate(new Date());
         vEcritureComptable.setLibelle("Ordinateurs");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(512),
@@ -139,7 +139,7 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     @Test
     public void checkUpdateSequenceEcritureComptableNominal() throws NotFoundException {
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
-        vSequenceEcritureComptable.setJournalCode("OD");
+        vSequenceEcritureComptable.setJournalCode("AC");
         vSequenceEcritureComptable.setAnnee(2019);
         vSequenceEcritureComptable.setDerniereValeur(2);
 
