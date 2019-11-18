@@ -105,11 +105,18 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     }
 
     @Test
-    public void checkGetLastValueSequenceEcritureComptableforYear() throws NotFoundException {
+    public void checkGetLastValueSequenceEcritureComptableforYearNominal() throws NotFoundException {
         SequenceEcritureComptable sequenceEcritureComptable = comptabiliteDao.
                 getLastValueSequenceEcritureComptableforYear("AC", 2016);
 
-        Assertions.assertThat(sequenceEcritureComptable.getDerniereValeur()).isEqualTo(40);
+        Assertions.assertThat(sequenceEcritureComptable.getDerniereValeur()).isEqualTo(2);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void checkGetLastValueSequenceEcritureComptableforYear() throws NotFoundException {
+        SequenceEcritureComptable sequenceEcritureComptable = comptabiliteDao.
+                getLastValueSequenceEcritureComptableforYear("AC", 2020);
+
     }
 
     @Test
@@ -130,7 +137,7 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     public void checkInsertSequenceEcritureComptable() throws NotFoundException{
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
         vSequenceEcritureComptable.setJournalCode("AC");
-        vSequenceEcritureComptable.setAnnee(2019);
+        vSequenceEcritureComptable.setAnnee(2016);
         vSequenceEcritureComptable.setDerniereValeur(1);
 
         comptabiliteDao.insertSequenceEcritureComptable(vSequenceEcritureComptable);
