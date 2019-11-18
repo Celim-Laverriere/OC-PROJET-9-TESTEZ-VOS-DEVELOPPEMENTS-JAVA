@@ -139,7 +139,7 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     @Test
     public void checkUpdateSequenceEcritureComptableNominal() throws NotFoundException {
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
-        vSequenceEcritureComptable.setJournalCode("AC");
+        vSequenceEcritureComptable.setJournalCode("OD");
         vSequenceEcritureComptable.setAnnee(2019);
         vSequenceEcritureComptable.setDerniereValeur(2);
 
