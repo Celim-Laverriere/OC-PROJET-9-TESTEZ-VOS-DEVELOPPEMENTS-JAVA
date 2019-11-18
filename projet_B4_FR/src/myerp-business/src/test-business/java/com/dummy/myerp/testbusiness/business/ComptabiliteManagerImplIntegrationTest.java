@@ -40,7 +40,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     public void checkInsertEcritureComptableNominal() throws FunctionalException {
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("VE", "Vente"));
-        vEcritureComptable.setReference("VE-2019/00012");
+        vEcritureComptable.setReference("VE-2019/00006");
         vEcritureComptable.setDate(new Date());
         vEcritureComptable.setLibelle("TMA Appli Yyy");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
@@ -57,7 +57,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
         vRetour = vRetour.add(new BigDecimal(123));
 
         for (EcritureComptable ecritureComptable : ecritureComptableList) {
-            if (ecritureComptable.getReference().equals("VE-2019/00012")) {
+            if (ecritureComptable.getReference().equals("VE-2019/00006")) {
                 Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("TMA Appli Yyy");
 
                 for (LigneEcritureComptable ligneEcritureComptable : ecritureComptable.getListLigneEcriture()) {
