@@ -115,14 +115,14 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     @Test
     public void checkInsertSequenceEcritureComptableNominal() throws NotFoundException {
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
-        vSequenceEcritureComptable.setJournalCode("AC");
+        vSequenceEcritureComptable.setJournalCode("OD");
         vSequenceEcritureComptable.setAnnee(2019);
         vSequenceEcritureComptable.setDerniereValeur(1);
 
         comptabiliteDao.insertSequenceEcritureComptable(vSequenceEcritureComptable);
 
         SequenceEcritureComptable v2SequenceEcritureComptable = comptabiliteDao.
-                getLastValueSequenceEcritureComptableforYear("AC", 2019);
+                getLastValueSequenceEcritureComptableforYear("OD", 2019);
         Assertions.assertThat(v2SequenceEcritureComptable.getDerniereValeur()).isEqualTo(1);
     }
 
@@ -140,12 +140,12 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     public void checkUpdateSequenceEcritureComptableNominal() throws NotFoundException {
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
         vSequenceEcritureComptable.setJournalCode("AC");
-        vSequenceEcritureComptable.setAnnee(2019);
+        vSequenceEcritureComptable.setAnnee(2016);
         vSequenceEcritureComptable.setDerniereValeur(2);
 
         comptabiliteDao.updateSequenceEcritureComptable(vSequenceEcritureComptable);
         SequenceEcritureComptable v2SequenceEcritureComptable = comptabiliteDao.
-                getLastValueSequenceEcritureComptableforYear("AC", 2019);
+                getLastValueSequenceEcritureComptableforYear("AC", 2016);
         Assertions.assertThat(v2SequenceEcritureComptable.getDerniereValeur()).isEqualTo(2);
 
     }
