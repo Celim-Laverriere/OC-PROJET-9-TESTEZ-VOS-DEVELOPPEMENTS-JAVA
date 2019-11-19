@@ -36,7 +36,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
         Assertions.assertThat(ecritureComptableList).isNotEmpty();
     }
 
-    @Test
+    @Test(expected = FunctionalException.class)
     public void checkInsertEcritureComptableNominal() throws FunctionalException {
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("VE", "Vente"));
