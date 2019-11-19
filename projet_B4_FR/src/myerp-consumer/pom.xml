@@ -70,6 +70,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+        </dependency>
+
         <!-- ===== Database (pour les tests) ===== -->
         <!-- Pool de connexion -->
         <dependency>

@@ -122,14 +122,14 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     @Test
     public void checkInsertSequenceEcritureComptableNominal() throws NotFoundException {
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
-        vSequenceEcritureComptable.setJournalCode("OD");
+        vSequenceEcritureComptable.setJournalCode("AC");
         vSequenceEcritureComptable.setAnnee(2019);
         vSequenceEcritureComptable.setDerniereValeur(1);
 
         comptabiliteDao.insertSequenceEcritureComptable(vSequenceEcritureComptable);
 
         SequenceEcritureComptable v2SequenceEcritureComptable = comptabiliteDao.
-                getLastValueSequenceEcritureComptableforYear("OD", 2019);
+                getLastValueSequenceEcritureComptableforYear("AC", 2019);
         Assertions.assertThat(v2SequenceEcritureComptable.getDerniereValeur()).isEqualTo(1);
     }
 
