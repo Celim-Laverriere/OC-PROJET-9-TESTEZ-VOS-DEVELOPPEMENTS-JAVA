@@ -63,7 +63,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      */
     // TODO à tester
     @Override
-    public synchronized void addReference(EcritureComptable pEcritureComptable) throws NotFoundException {
+    public synchronized void addReference(EcritureComptable pEcritureComptable) throws NotFoundException, FunctionalException {
 
         // TODO à implémenter
         // Bien se réferer à la JavaDoc de cette méthode !
@@ -76,66 +76,80 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         // Apple la méthode extractCurrentYear() pour extraire année de la date passé en paramètre
         Integer currentYear = extractCurrentYear(pEcritureComptable.getDate());
 
-        try {
+        if (pEcritureComptable.getId() != null) {
+
             // Remonte depuis la persistance la dernière valeur de la séquence du journal pour l'année de l'écriture
-            SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().
-                    getLastValueSequenceEcritureComptableforYear(pEcritureComptable.getJournal().getCode(), currentYear);
+            try {
+                SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().
+                        getLastValueSequenceEcritureComptableforYear(
+                                pEcritureComptable.getJournal().getCode(), currentYear);
 
-            if(currentYear.equals(sequenceEcritureComptable.getAnnee())){
-                // Mise à jour de la dernière valeur augmentée de 1 d'écriture Comptable
-                sequenceEcritureComptable.setDerniereValeur(sequenceEcritureComptable.getDerniereValeur() + 1);
+                if(currentYear.equals(sequenceEcritureComptable.getAnnee())){
+                    // Mise à jour de la dernière valeur augmentée de 1 d'écriture Comptable
+                    sequenceEcritureComptable.setDerniereValeur(sequenceEcritureComptable.getDerniereValeur() + 1);
 
-                TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
+                    TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
 
-                try {
-                    // Enregistrer (update) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
-                    getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(sequenceEcritureComptable);
-                    getTransactionManager().commitMyERP(vTS);
-                    vTS = null;
-                } finally {
-                    getTransactionManager().rollbackMyERP(vTS);
+                    try {
+                        // Enregistrer (update) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
+                        getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(sequenceEcritureComptable);
+                        getTransactionManager().commitMyERP(vTS);
+                        vTS = null;
+                    } finally {
+                        getTransactionManager().rollbackMyERP(vTS);
+                    }
+
+                    // Appel de la classe formatageReference() pour formater la référence selon le RG_Compta_5
+                    pEcritureComptable.setReference(formatageReference(sequenceEcritureComptable));
+                        /* pEcritureComptable.setDate(pEcritureComptable.getDate());
+                           pEcritureComptable.setLibelle(pEcritureComptable.getLibelle());
+                           Mettre à jour la référence de l'écriture avec la référence calculée (RG_Compta_5)
+                           getDaoProxy().getComptabiliteDao().updateEcritureComptable(pEcritureComptable);
+                           */
                 }
 
-                // Appel de la classe formatageReference() pour formater la référence selon le RG_Compta_5
-                pEcritureComptable.setReference(formatageReference(sequenceEcritureComptable));
-//                pEcritureComptable.setDate(pEcritureComptable.getDate());
-//                pEcritureComptable.setLibelle(pEcritureComptable.getLibelle());
-
-                // Mettre à jour la référence de l'écriture avec la référence calculée (RG_Compta_5)
-//                getDaoProxy().getComptabiliteDao().updateEcritureComptable(pEcritureComptable);
-
+            } catch (Exception vEX) {
+                throw new NotFoundException("Aucune séquense n'a été trouvé !" );
             }
-
-        } catch (Exception vEX) {
-            // Création d'une nouvelle séquence d'écriture comptable
-            SequenceEcritureComptable sequenceEcritureComptable = new SequenceEcritureComptable();
-            sequenceEcritureComptable.setJournalCode(pEcritureComptable.getJournal().getCode());
-            sequenceEcritureComptable.setAnnee(currentYear);
-            sequenceEcritureComptable.setDerniereValeur(1);
-
-            TransactionStatus vTs = getTransactionManager().beginTransactionMyERP();
-
-            try {
-                // Enregistrer (insert) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
-                getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(sequenceEcritureComptable);
-                getTransactionManager().commitMyERP(vTs);
-                vTs = null;
-            } finally {
-                getTransactionManager().rollbackMyERP(vTs);
-            }
-
-            // Appel la classe formatageReference() pour formater la référence selon le RG_Compta_5
-            pEcritureComptable.setReference(formatageReference(sequenceEcritureComptable));
-
-//            pEcritureComptable.setDate(pEcritureComptable.getDate());
-//            pEcritureComptable.setLibelle(pEcritureComptable.getLibelle());
-
-            // Insert de la référence de l'écriture avec la référence calculée (RG_Compta_5)
-//            getDaoProxy().getComptabiliteDao().insertEcritureComptable(pEcritureComptable);
-
-            // Rajouter transaction pour vériffier avant commit
         }
 
+        if (pEcritureComptable.getId() == null) {
+
+            SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().
+                    getLastValueSequenceEcritureComptableforYear(
+                            pEcritureComptable.getJournal().getCode(), currentYear);
+
+            if (sequenceEcritureComptable == null) {
+                // Création d'une nouvelle séquence d'écriture comptable
+                SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
+                vSequenceEcritureComptable.setJournalCode(pEcritureComptable.getJournal().getCode());
+                vSequenceEcritureComptable.setAnnee(currentYear);
+                vSequenceEcritureComptable.setDerniereValeur(1);
+
+                TransactionStatus vTs = getTransactionManager().beginTransactionMyERP();
+
+                try {
+                    // Enregistrer (insert) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
+                    getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(vSequenceEcritureComptable);
+                    getTransactionManager().commitMyERP(vTs);
+                    vTs = null;
+                } finally {
+                    getTransactionManager().rollbackMyERP(vTs);
+                }
+
+                // Appel la classe formatageReference() pour formater la référence selon le RG_Compta_5
+                pEcritureComptable.setReference(formatageReference(vSequenceEcritureComptable));
+
+                /* pEcritureComptable.setDate(pEcritureComptable.getDate());
+                   pEcritureComptable.setLibelle(pEcritureComptable.getLibelle());
+                   Insert de la référence de l'écriture avec la référence calculée (RG_Compta_5)
+                   getDaoProxy().getComptabiliteDao().insertEcritureComptable(pEcritureComptable);
+                   Rajouter transaction pour vériffier avant commit
+                  */
+            } else {
+                throw new FunctionalException("La séquence existe déjà !");
+            }
+        }
     }
 
     /**
@@ -193,7 +207,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         if (pEcritureComptable.getListLigneEcriture().size() < 2
                 || vNbrCredit < 1
                 || vNbrDebit < 1) {
-            System.out.println("Coucou le test !");
             throw new FunctionalException(
                     "L'écriture comptable doit avoir au moins deux lignes : une ligne au débit et une ligne au crédit.");
         }

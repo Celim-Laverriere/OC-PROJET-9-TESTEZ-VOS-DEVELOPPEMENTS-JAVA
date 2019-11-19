@@ -11,6 +11,7 @@ import com.dummy.myerp.business.impl.TransactionManager;
 import com.dummy.myerp.consumer.dao.contrat.ComptabiliteDao;
 import com.dummy.myerp.consumer.dao.contrat.DaoProxy;
 import com.dummy.myerp.model.bean.comptabilite.*;
+import com.dummy.myerp.technical.exception.NotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -133,9 +134,10 @@ public class ComptabiliteManagerImplTest {
     }
 
     @Test
-    public void checkUpdateAddReference() throws Exception {
+    public void checkUpdateAddReferenceNominal() throws Exception {
 
         EcritureComptable vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setId(-1);
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
         vEcritureComptable.setDate(new Date());
         vEcritureComptable.setLibelle("Libelle");
@@ -162,8 +164,34 @@ public class ComptabiliteManagerImplTest {
 
     }
 
+    @Test(expected = NotFoundException.class)
+    public void checkUpdateAddReference() throws Exception {
+
+        EcritureComptable vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setId(-1);
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setLibelle("Libelle");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
+                null, new BigDecimal(123),
+                null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2),
+                null, null,
+                new BigDecimal(123)));
+
+        SequenceEcritureComptable rSequenceEcritureComptable = new SequenceEcritureComptable();
+        rSequenceEcritureComptable.setJournalCode("AC");
+        rSequenceEcritureComptable.setAnnee(2019);
+        rSequenceEcritureComptable.setDerniereValeur(78);
+
+        when(this.comptabiliteDaoMock.getLastValueSequenceEcritureComptableforYear("BQ", 2019))
+                .thenReturn(rSequenceEcritureComptable);
+
+        manager.addReference(vEcritureComptable);
+    }
+
     @Test
-    public void checkInsertAddReference() throws Exception {
+    public void checkInsertAddReferenceNominal() throws Exception {
 
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
@@ -189,6 +217,32 @@ public class ComptabiliteManagerImplTest {
         Assertions.assertThat(rSequenceEcritureComptable.getJournalCode()).isEqualTo("BQ");
         Assertions.assertThat(rSequenceEcritureComptable.getAnnee()).isEqualTo(2019);
         Assertions.assertThat(vEcritureComptable.getReference()).isEqualTo("BQ-2019/00001");
+    }
+
+    @Test(expected = FunctionalException.class)
+    public void checkInsertAddReference() throws Exception {
+
+        EcritureComptable vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setLibelle("Paiement Facture C120003");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
+                null, new BigDecimal(600),
+                null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2),
+                null, null,
+                new BigDecimal(600)));
+
+        SequenceEcritureComptable rSequenceEcritureComptable = new SequenceEcritureComptable();
+        rSequenceEcritureComptable.setJournalCode("BQ");
+        rSequenceEcritureComptable.setAnnee(2019);
+        rSequenceEcritureComptable.setDerniereValeur(1);
+
+        when(this.comptabiliteDaoMock.getLastValueSequenceEcritureComptableforYear("BQ", 2019))
+                .thenReturn(rSequenceEcritureComptable);
+
+        manager.addReference(vEcritureComptable);
+
     }
 
 }

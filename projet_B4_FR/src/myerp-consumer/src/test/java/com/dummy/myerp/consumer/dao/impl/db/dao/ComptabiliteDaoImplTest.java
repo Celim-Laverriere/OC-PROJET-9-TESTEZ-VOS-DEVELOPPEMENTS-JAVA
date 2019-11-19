@@ -7,6 +7,5 @@ public class ComptabiliteDaoImplTest {
 
     @Test
     public void checkListJournalComptable(){
-
     }
 }

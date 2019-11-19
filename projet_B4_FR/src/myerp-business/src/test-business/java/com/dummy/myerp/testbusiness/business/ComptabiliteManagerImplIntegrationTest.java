@@ -72,30 +72,6 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
         }
     }
 
-    @Test(expected = FunctionalException.class)
-    public void checkInsertEcritureComptable() throws FunctionalException {
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
-        String date = "2016-12-29";
-
-        EcritureComptable vEcritureComptable = new EcritureComptable();
-        vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
-        vEcritureComptable.setReference("BQ-2016/00003");
-        try {
-            vEcritureComptable.setDate(simpleDateFormat.parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        vEcritureComptable.setLibelle("Paiement Facture F110001");
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
-                                                                                null, new BigDecimal(123),
-                                                                                null));
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(706),
-                                                                                            null, null,
-                                                                                            new BigDecimal(123)));
-        manager.insertEcritureComptable(vEcritureComptable);
-    }
-
     @Test
     public void checkUpdateEcritureComptableNominal() throws FunctionalException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
@@ -112,11 +88,11 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
         vEcritureComptable.setReference("VE-2016/00002");
         vEcritureComptable.setLibelle("Imprimante");
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
-                                                                                null, new BigDecimal(250),
-                                                                                null));
+                null, new BigDecimal(250),
+                null));
         vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(706),
-                                                                                            null, null,
-                                                                                            new BigDecimal(250)));
+                null, null,
+                new BigDecimal(250)));
 
         manager.updateEcritureComptable(vEcritureComptable);
         List<EcritureComptable> ecritureComptableList = manager.getListEcritureComptable();
@@ -140,6 +116,30 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
                 }
             }
         }
+    }
+
+    @Test(expected = FunctionalException.class)
+    public void checkInsertEcritureComptable() throws FunctionalException {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
+        String date = "2016-12-29";
+
+        EcritureComptable vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
+        vEcritureComptable.setReference("BQ-2016/00003");
+        try {
+            vEcritureComptable.setDate(simpleDateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        vEcritureComptable.setLibelle("Paiement Facture F110001");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
+                                                                                null, new BigDecimal(123),
+                                                                                null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(706),
+                                                                                            null, null,
+                                                                                            new BigDecimal(123)));
+        manager.insertEcritureComptable(vEcritureComptable);
     }
 
     @Test(expected = FunctionalException.class)
@@ -171,6 +171,5 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
             Assertions.assertThat(ecritureComptable.getId()).isNotEqualTo(1);
         }
     }
-
 
 }
