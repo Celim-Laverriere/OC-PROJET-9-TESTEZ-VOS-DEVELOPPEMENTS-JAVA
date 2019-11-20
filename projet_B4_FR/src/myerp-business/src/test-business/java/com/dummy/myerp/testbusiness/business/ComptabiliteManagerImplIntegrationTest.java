@@ -18,24 +18,41 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
 
     private ComptabiliteManagerImpl manager = new ComptabiliteManagerImpl();
 
+    /**
+     * Test si la méthode renvoie bien la liste des comptes comptables
+     * @see ComptabiliteManagerImpl#getListCompteComptable()
+     */
     @Test
     public void checkGetListCompteComptable() {
         List<CompteComptable> compteComptableList = manager.getListCompteComptable();
         Assertions.assertThat(compteComptableList).isNotEmpty();
     }
 
+    /**
+     * Test si la méthode renvoie bien la liste des journals comptable
+     * @see ComptabiliteManagerImpl#getListJournalComptable() 
+      */
     @Test
     public void checkGetListJournalComptable() {
         List<JournalComptable> journalComptableList = manager.getListJournalComptable();
         Assertions.assertThat(journalComptableList).isNotEmpty();
     }
 
+    /**
+     * Test si la méthode renvoie bien la liste des écritures comptables
+     * @see ComptabiliteManagerImpl#getListEcritureComptable() 
+     */
     @Test
     public void checkGetListEcritureComptable() {
         List<EcritureComptable> ecritureComptableList = manager.getListEcritureComptable();
         Assertions.assertThat(ecritureComptableList).isNotEmpty();
     }
 
+    /**
+     * Test l'insertion d'une écriture comptable dans la base de données.
+     * @see ComptabiliteManagerImpl#insertEcritureComptable(EcritureComptable) 
+     * @throws FunctionalException
+     */
     @Test
     public void checkInsertEcritureComptableNominal() throws FunctionalException {
         EcritureComptable vEcritureComptable = new EcritureComptable();
@@ -72,6 +89,40 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
         }
     }
 
+    /**
+     * Test le déclenchement de l'exception lors de l'insertion d'une écriture comptable.
+     * @see ComptabiliteManagerImpl#insertEcritureComptable(EcritureComptable) 
+     * @throws FunctionalException
+     */
+    @Test(expected = FunctionalException.class)
+    public void checkInsertEcritureComptable() throws FunctionalException {
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
+        String date = "2016-12-29";
+
+        EcritureComptable vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
+        vEcritureComptable.setReference("BQ-2016/00003");
+        try {
+            vEcritureComptable.setDate(simpleDateFormat.parse(date));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        vEcritureComptable.setLibelle("Paiement Facture F110001");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
+                null, new BigDecimal(123),
+                null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(706),
+                null, null,
+                new BigDecimal(123)));
+        manager.insertEcritureComptable(vEcritureComptable);
+    }
+
+    /**
+     * Test la mise à jour d'une écriture comptable dans la base de données.
+     * @see ComptabiliteManagerImpl#updateEcritureComptable(EcritureComptable) 
+     * @throws FunctionalException
+     */
     @Test
     public void checkUpdateEcritureComptableNominal() throws FunctionalException {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
@@ -118,30 +169,11 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
         }
     }
 
-    @Test(expected = FunctionalException.class)
-    public void checkInsertEcritureComptable() throws FunctionalException {
-
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd");
-        String date = "2016-12-29";
-
-        EcritureComptable vEcritureComptable = new EcritureComptable();
-        vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
-        vEcritureComptable.setReference("BQ-2016/00003");
-        try {
-            vEcritureComptable.setDate(simpleDateFormat.parse(date));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        vEcritureComptable.setLibelle("Paiement Facture F110001");
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(411),
-                                                                                null, new BigDecimal(123),
-                                                                                null));
-        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(706),
-                                                                                            null, null,
-                                                                                            new BigDecimal(123)));
-        manager.insertEcritureComptable(vEcritureComptable);
-    }
-
+    /**
+     * Test le déclenchement de l'exception lors de la mise à jour d'une écriture comptable.
+     * @see ComptabiliteManagerImpl#updateEcritureComptable(EcritureComptable) 
+     * @throws FunctionalException
+     */
     @Test(expected = FunctionalException.class)
     public void checkUpdateEcritureComptable() throws FunctionalException {
         EcritureComptable vEcritureComptable = new EcritureComptable();
@@ -160,6 +192,10 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
         manager.updateEcritureComptable(vEcritureComptable);
     }
 
+    /**
+     * Test la suppression d'une écriture comptable.
+     * @see ComptabiliteManagerImpl#deleteEcritureComptable(Integer) 
+     */
     @Test
     public void checkdeleteEcritureComptable() {
         Integer pId = 1;

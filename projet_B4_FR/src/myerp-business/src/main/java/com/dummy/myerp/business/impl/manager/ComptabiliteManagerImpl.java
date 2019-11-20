@@ -165,8 +165,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
      */
     // TODO tests à compléter
     protected void checkEcritureComptableUnit(EcritureComptable pEcritureComptable) throws FunctionalException {
-        // ===== Vérification des contraintes unitaires sur les attributs de l'écriture
 
+        // ===== Vérification des contraintes unitaires sur les attributs de l'écriture
         Set<ConstraintViolation<EcritureComptable>> vViolations = getConstraintValidator().validate(pEcritureComptable);
         if (!vViolations.isEmpty()) {
 
@@ -217,7 +217,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         if (Integer.parseInt(referenceSplitDate[0]) != currentYear ) {
             throw new FunctionalException("L'année dans la référence ne correspond pas à la date de l'écriture.");
         }
-
     }
 
 

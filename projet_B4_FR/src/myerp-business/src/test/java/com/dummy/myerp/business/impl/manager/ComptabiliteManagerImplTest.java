@@ -20,14 +20,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.when;
 
-
 public class ComptabiliteManagerImplTest {
 
     private ComptabiliteManagerImpl manager = new ComptabiliteManagerImpl();
 
-
+    /**
+     * Test nominal qui Vérifie que l'Ecriture comptable respecte les règles de gestion unitaires.
+     * @see ComptabiliteManagerImpl#checkEcritureComptableUnit(EcritureComptable)
+     * @throws FunctionalException
+     */
     @Test
-    public void checkEcritureComptableUnit() throws Exception {
+    public void checkEcritureComptableUnit() throws FunctionalException {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -43,15 +46,26 @@ public class ComptabiliteManagerImplTest {
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 
+    /**
+     * Test le déclenchement de l'exception lors d'une violation des contraintes unitaires
+     * sur les attributs de l'écriture.
+     * @see ComptabiliteManagerImpl#checkEcritureComptableUnit(EcritureComptable)
+     * @throws FunctionalException
+     */
     @Test(expected = FunctionalException.class)
-    public void checkEcritureComptableUnitViolation() throws Exception {
+    public void checkEcritureComptableUnitViolation() throws FunctionalException {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 
+    /**
+     * Test le déclenchement de l'exception pour une écriture comptable qui n'est pas équilibrée (RG_Compta_2)
+     * @see ComptabiliteManagerImpl#checkEcritureComptableUnit(EcritureComptable)
+     * @throws FunctionalException
+     */
     @Test(expected = FunctionalException.class)
-    public void checkEcritureComptableUnitRG2() throws Exception {
+    public void checkEcritureComptableUnitRG2() throws FunctionalException {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -67,8 +81,14 @@ public class ComptabiliteManagerImplTest {
 
     }
 
+    /**
+     * Test le déclenchement de l'exception pour une écriture comptable doit avoir au moins 2 lignes d'écriture
+     * (1 au débit, 1 au crédit) (RG_Compta_3)
+     * @see ComptabiliteManagerImpl#checkEcritureComptableUnit(EcritureComptable)
+     * @throws FunctionalException
+     */
     @Test(expected = FunctionalException.class)
-    public void checkEcritureComptableUnitRG3() throws Exception {
+    public void checkEcritureComptableUnitRG3() throws FunctionalException {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -83,8 +103,14 @@ public class ComptabiliteManagerImplTest {
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 
+    /**
+     * Test le déclenchement de l'exception pour une écriture comptable dont le code journal de la référence
+     * ne correspond au code journal (RG_Compta_5).
+     * @see ComptabiliteManagerImpl#checkEcritureComptableUnit(EcritureComptable)
+     * @throws FunctionalException
+     */
     @Test(expected = FunctionalException.class)
-    public void checkEcritureComptableUnitRG5CodeJournal() throws Exception {
+    public void checkEcritureComptableUnitRG5CodeJournal() throws FunctionalException {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -100,8 +126,14 @@ public class ComptabiliteManagerImplTest {
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 
+    /**
+     * Test le déclenchement de l'exception pour une écriture comptable dont l'année dans la référence
+     * ne correspond pas à la date de l'écriture (RG_Compta_5).
+     * @see ComptabiliteManagerImpl#checkEcritureComptableUnit(EcritureComptable)
+     * @throws FunctionalException
+     */
     @Test(expected = FunctionalException.class)
-    public void checkEcritureComptableUnitRG5Date() throws Exception {
+    public void checkEcritureComptableUnitRG5Date() throws FunctionalException {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
@@ -118,7 +150,9 @@ public class ComptabiliteManagerImplTest {
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 
-
+    /**
+     * Déclaration des classes utilisé avec l'annotation @Mock afin de pouvoir l'injecter dans le code
+     */
     @Mock
     private ComptabiliteDao comptabiliteDaoMock;
     @Mock
@@ -126,6 +160,10 @@ public class ComptabiliteManagerImplTest {
     @Mock
     private TransactionManager transactionManagerMock;
 
+    /**
+     * Dans la méthode setUp, je vais initialiser le mocker d'accès à la base de données pour la bypasser.
+     * La méthode est annotée @Before pour qu'elle soit exécutée avant les tests.
+     */
     @Before
     public void setUp(){
         MockitoAnnotations.initMocks(this);
@@ -133,8 +171,14 @@ public class ComptabiliteManagerImplTest {
         AbstractBusinessManager.configure(null, this.daoProxyMock, this.transactionManagerMock);
     }
 
+    /**
+     * Test la mise à jour de la séquence du journal pour l'année de l'écriture.
+     * @see ComptabiliteManagerImpl#addReference(EcritureComptable)
+     * @throws NotFoundException
+     * @throws FunctionalException
+     */
     @Test
-    public void checkUpdateAddReferenceNominal() throws Exception {
+    public void checkUpdateAddReferenceNominal() throws NotFoundException, FunctionalException {
 
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setId(-1);
@@ -164,8 +208,14 @@ public class ComptabiliteManagerImplTest {
 
     }
 
+    /**
+     * Test le déclenchement de l'exception si aucune séquence du journal pour l'année de l'écriture n'a été trouvé.
+     * @see ComptabiliteManagerImpl#addReference(EcritureComptable)
+     * @throws NotFoundException
+     * @throws FunctionalException
+     */
     @Test(expected = NotFoundException.class)
-    public void checkUpdateAddReference() throws Exception {
+    public void checkUpdateAddReference() throws NotFoundException, FunctionalException {
 
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setId(-1);
@@ -190,8 +240,14 @@ public class ComptabiliteManagerImplTest {
         manager.addReference(vEcritureComptable);
     }
 
+    /**
+     * Test l'insertion de la séquence du journal pour l'année de l'écriture.
+     * @see ComptabiliteManagerImpl#addReference(EcritureComptable)
+     * @throws NotFoundException
+     * @throws FunctionalException
+     */
     @Test
-    public void checkInsertAddReferenceNominal() throws Exception {
+    public void checkInsertAddReferenceNominal() throws NotFoundException, FunctionalException {
 
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
@@ -219,8 +275,14 @@ public class ComptabiliteManagerImplTest {
         Assertions.assertThat(vEcritureComptable.getReference()).isEqualTo("BQ-2019/00001");
     }
 
+    /**
+     * Test le déclenchement de l'exception si la séquence du journal pour l'année de l'écriture existe déjà.
+     * @see ComptabiliteManagerImpl#addReference(EcritureComptable)
+     * @throws NotFoundException
+     * @throws FunctionalException
+     */
     @Test(expected = FunctionalException.class)
-    public void checkInsertAddReference() throws Exception {
+    public void checkInsertAddReference() throws NotFoundException, FunctionalException {
 
         EcritureComptable vEcritureComptable = new EcritureComptable();
         vEcritureComptable.setJournal(new JournalComptable("BQ", "Banque"));
