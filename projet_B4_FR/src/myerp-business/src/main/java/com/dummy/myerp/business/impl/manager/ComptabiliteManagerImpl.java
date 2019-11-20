@@ -242,7 +242,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 // c'est qu'il y a déjà une autre écriture avec la même référence
                 if (pEcritureComptable.getId() == null
                         || !pEcritureComptable.getId().equals(vECRef.getId())) {
-                    throw new FunctionalException("Une autre écriture comptable existe déjà avec la même référence.");
+                    throw new FunctionalException("Une autre écriture comptable existe déjà avec la même référence." + vECRef.getId());
                 }
 
             } catch (NotFoundException vEx) {

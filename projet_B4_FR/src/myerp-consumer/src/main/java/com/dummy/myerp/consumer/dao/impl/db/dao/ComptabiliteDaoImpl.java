@@ -311,7 +311,7 @@ public class ComptabiliteDaoImpl extends AbstractDbConsumer implements Comptabil
         try {
             vJdbcTemplate.update(SQLinsertSequenceEcritureComptable, vSqlParams);
         } catch (Exception vEX) {
-            throw new NotFoundException("La séquence d'écriture comptable existe déjà!");
+            throw new NotFoundException("La séquence d'écriture comptable existe déjà!" + vEX.getMessage());
         }
 
 
