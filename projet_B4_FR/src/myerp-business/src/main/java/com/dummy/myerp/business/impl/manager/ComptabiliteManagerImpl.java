@@ -249,6 +249,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 // Dans ce cas, c'est bon, ça veut dire qu'on n'a aucune autre écriture avec la même référence.
                 // Si l'écriture à vérifier est une mise à jour (id != null)
                 // et si aucune écriture n'est trouvé (référence == null)
+
                 if(pEcritureComptable.getId() != null) {
                     throw new FunctionalException("Aucune écriture comptable existe pour cette référence.");
                 }
