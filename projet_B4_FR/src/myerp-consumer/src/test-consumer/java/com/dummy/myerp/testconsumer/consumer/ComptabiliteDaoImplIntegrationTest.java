@@ -13,24 +13,41 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
 
     private ComptabiliteDaoImpl comptabiliteDao = ComptabiliteDaoImpl.getInstance();
 
+    /**
+     * Test si la méthode renvoie bien la liste des comptes comptables
+     * @see ComptabiliteDaoImpl#getListCompteComptable()
+     */
     @Test
     public void checkGetListCompteComptable() {
         List<CompteComptable> compteComptableList = comptabiliteDao.getListCompteComptable();
         Assertions.assertThat(compteComptableList).isNotEmpty();
     }
 
+    /**
+     * Test si la méthode renvoie bien la liste des journals comptable
+     * @see ComptabiliteDaoImpl#getListJournalComptable()
+     */
     @Test
     public void checkGetListJournalComptable() {
         List<JournalComptable> journalComptableList = comptabiliteDao.getListJournalComptable();
         Assertions.assertThat(journalComptableList.isEmpty());
     }
 
+    /**
+     * Test si la méthode renvoie bien la liste des écritures comptables
+     * @see ComptabiliteDaoImpl#getListEcritureComptable()
+     */
     @Test
     public void checkGetListEcritureComptable() {
         List<EcritureComptable>  ecritureComptableList = comptabiliteDao.getListEcritureComptable();
         Assertions.assertThat(ecritureComptableList.isEmpty());
     }
 
+    /**
+     * Test si la méthode renvoie bien l'écriture comptable pour l'identifiant passé en paramètre
+     * @see ComptabiliteDaoImpl#getEcritureComptable(Integer) 
+     * @throws NotFoundException
+     */
     @Test
     public void checkGetEcritureComptable() throws NotFoundException {
        EcritureComptable ecritureComptable = comptabiliteDao.getEcritureComptable(-4);
@@ -41,6 +58,11 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
        Assertions.assertThat(ecritureComptable.getLibelle()).isEqualTo("TMA Appli Yyy");
     }
 
+    /**
+     * TTest si la méthode renvoie bien l'écriture comptable pour la référence passée en paramètre
+     * @see ComptabiliteDaoImpl#getEcritureComptableByRef(String)
+     * @throws NotFoundException
+     */
     @Test
     public void checkGetEcritureComptableByRefNominal() throws NotFoundException {
         EcritureComptable vEcritureComptable = comptabiliteDao.getEcritureComptableByRef("BQ-2016/00005");
@@ -49,11 +71,19 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         Assertions.assertThat(vEcritureComptable.getListLigneEcriture().size() > 1);
     }
 
+    /**
+     * Test le déclenchement de l'exception quand aucune référence n'a été trouvé pour une écriture comptable
+     * @throws NotFoundException
+     */
     @Test(expected = NotFoundException.class)
     public void checkGetEcritureComptableByRef() throws NotFoundException {
         EcritureComptable vEcritureComptable = comptabiliteDao.getEcritureComptableByRef("DE-2016/00005");
     }
 
+    /**
+     * Test l'insertion d'une écriture comptable dans la base de données
+     * @see ComptabiliteDaoImpl#insertEcritureComptable(EcritureComptable)
+     */
     @Test
     public void checkInsertEcritureComptable() {
         EcritureComptable vEcritureComptable = new EcritureComptable();
@@ -74,6 +104,11 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         Assertions.assertThat(vEcritureComptable.getListLigneEcriture().size() > 1);
     }
 
+    /**
+     * Test la mise à jour d'une écriture comptable dans la base de données
+     * @see ComptabiliteDaoImpl#updateEcritureComptable(EcritureComptable)
+     * @throws NotFoundException
+     */
     @Test
     public void checkUpdateEcritureComptable() throws NotFoundException {
         EcritureComptable vEcritureComptable = new EcritureComptable();
@@ -97,13 +132,12 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         Assertions.assertThat(v2EcritureComptable.getListLigneEcriture().contains(800));
     }
 
-    @Test(expected = NotFoundException.class)
-    public void checkDeleteEcritureComptable() throws NotFoundException {
-        Integer pId = 28;
-        comptabiliteDao.deleteEcritureComptable(pId);
-        Assertions.assertThat(comptabiliteDao.getEcritureComptable(28)).isEqualTo(null);
-    }
-
+    /**
+     * Test si la méthode renvoie bien séquence de l'écriture comptable pour le code journal et
+     * l'année passé en paramètre
+     * @see ComptabiliteDaoImpl#getLastValueSequenceEcritureComptableforYear(String, Integer) 
+     * @throws NotFoundException
+     */
     @Test
     public void checkGetLastValueSequenceEcritureComptableforYearNominal() throws NotFoundException {
         SequenceEcritureComptable sequenceEcritureComptable = comptabiliteDao.
@@ -112,6 +146,11 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         Assertions.assertThat(sequenceEcritureComptable.getDerniereValeur()).isEqualTo(2);
     }
 
+    /**
+     * Test le déclenchement de l'exception si la séquence de l'écriture comptable n'a pas été trouvé
+     * @see ComptabiliteDaoImpl#getLastValueSequenceEcritureComptableforYear(String, Integer)
+     * @throws NotFoundException
+     */
     @Test(expected = NotFoundException.class)
     public void checkGetLastValueSequenceEcritureComptableforYear() throws NotFoundException {
         SequenceEcritureComptable sequenceEcritureComptable = comptabiliteDao.
@@ -119,6 +158,10 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
 
     }
 
+    /**
+     * Test l'insertion d'une séquence d'une écriture comptable dans la base de données
+     * @see ComptabiliteDaoImpl#insertSequenceEcritureComptable(SequenceEcritureComptable)
+     */
     @Test
     public void checkInsertSequenceEcritureComptableNominal() throws NotFoundException {
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
@@ -133,6 +176,11 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         Assertions.assertThat(v2SequenceEcritureComptable.getDerniereValeur()).isEqualTo(1);
     }
 
+    /**
+     * Test le déclenchement de l'exception si la séquence de l'écriture comptable existe déjà
+     * @see ComptabiliteDaoImpl#insertSequenceEcritureComptable(SequenceEcritureComptable)
+     * @throws NotFoundException
+     */
     @Test(expected = NotFoundException.class)
     public void checkInsertSequenceEcritureComptable() throws NotFoundException{
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
@@ -143,6 +191,11 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         comptabiliteDao.insertSequenceEcritureComptable(vSequenceEcritureComptable);
     }
 
+    /**
+     * Test la mise à jour d'une séquence d'une écriture comptable dans la base de données
+     * @see ComptabiliteDaoImpl#updateSequenceEcritureComptable(SequenceEcritureComptable)
+     * @throws NotFoundException
+     */
     @Test
     public void checkUpdateSequenceEcritureComptableNominal() throws NotFoundException {
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
@@ -157,6 +210,11 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
 
     }
 
+    /**
+     * Test le déclenchement de l'exception si la séquence de l'écriture comptable existe pas
+     * @see ComptabiliteDaoImpl#updateSequenceEcritureComptable(SequenceEcritureComptable)
+     * @throws NotFoundException
+     */
     @Test(expected = NotFoundException.class)
     public void checkUpdateSequenceEcritureComptable() throws NotFoundException {
         SequenceEcritureComptable vSequenceEcritureComptable = new SequenceEcritureComptable();
@@ -167,6 +225,10 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
         comptabiliteDao.updateSequenceEcritureComptable(vSequenceEcritureComptable);
     }
 
+    /**
+     * Test la méthode qui renvoie la dernière écriture comptable persistée
+     * @see ComptabiliteDaoImpl#getLastOneEcritureComptable()
+     */
     @Test
     public void checkGetLastOneEcritureComptable() {
         EcritureComptable vEcritureComptable = comptabiliteDao.getLastOneEcritureComptable();
@@ -183,5 +245,17 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
                 Assertions.assertThat(ligneEcritureComptable.getCredit()).isEqualTo(vRetour);
             }
         }
+    }
+
+    /**
+     * Test la suppression d'une écriture comptable 
+     * @see ComptabiliteDaoImpl#deleteEcritureComptable(Integer) 
+     * @throws NotFoundException
+     */
+   @Test(expected = NotFoundException.class)
+    public void checkDeleteEcritureComptable() throws NotFoundException {
+        Integer pId = 2;
+        comptabiliteDao.deleteEcritureComptable(pId);
+        Assertions.assertThat(comptabiliteDao.getEcritureComptable(2)).isEqualTo(null);
     }
 }

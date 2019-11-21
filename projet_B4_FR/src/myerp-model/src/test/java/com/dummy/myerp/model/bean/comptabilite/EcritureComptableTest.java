@@ -21,6 +21,10 @@ public class EcritureComptableTest {
         return vRetour;
     }
 
+    /**
+     * Test l'équilibre des lignes de l'écriture comptable entre le montant au débit et le montant au crédit
+     * @see EcritureComptable#isEquilibree()
+     */
     @Test
     public void isEquilibree() {
         EcritureComptable vEcriture;

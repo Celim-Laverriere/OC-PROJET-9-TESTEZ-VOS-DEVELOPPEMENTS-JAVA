@@ -49,7 +49,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     }
 
     /**
-     * Test l'insertion d'une écriture comptable dans la base de données.
+     * Test l'insertion d'une écriture comptable dans la base de données
      * @see ComptabiliteManagerImpl#insertEcritureComptable(EcritureComptable) 
      * @throws FunctionalException
      */
@@ -90,7 +90,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     }
 
     /**
-     * Test le déclenchement de l'exception lors de l'insertion d'une écriture comptable.
+     * Test le déclenchement de l'exception lors de l'insertion d'une écriture comptable
      * @see ComptabiliteManagerImpl#insertEcritureComptable(EcritureComptable) 
      * @throws FunctionalException
      */
@@ -119,7 +119,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     }
 
     /**
-     * Test la mise à jour d'une écriture comptable dans la base de données.
+     * Test la mise à jour d'une écriture comptable dans la base de données
      * @see ComptabiliteManagerImpl#updateEcritureComptable(EcritureComptable) 
      * @throws FunctionalException
      */
@@ -170,7 +170,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     }
 
     /**
-     * Test le déclenchement de l'exception lors de la mise à jour d'une écriture comptable.
+     * Test le déclenchement de l'exception lors de la mise à jour d'une écriture comptable
      * @see ComptabiliteManagerImpl#updateEcritureComptable(EcritureComptable) 
      * @throws FunctionalException
      */
@@ -193,7 +193,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     }
 
     /**
-     * Test la suppression d'une écriture comptable.
+     * Test la suppression d'une écriture comptable
      * @see ComptabiliteManagerImpl#deleteEcritureComptable(Integer) 
      */
     @Test

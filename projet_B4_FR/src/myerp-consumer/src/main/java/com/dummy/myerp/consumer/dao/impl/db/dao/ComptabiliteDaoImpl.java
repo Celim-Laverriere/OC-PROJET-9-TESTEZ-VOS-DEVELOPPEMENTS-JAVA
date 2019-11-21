@@ -2,7 +2,6 @@ package com.dummy.myerp.consumer.dao.impl.db.dao;
 
 import java.sql.Types;
 import java.util.List;
-
 import com.dummy.myerp.consumer.dao.impl.db.rowmapper.comptabilite.*;
 import com.dummy.myerp.model.bean.comptabilite.*;
 import org.springframework.dao.EmptyResultDataAccessException;
