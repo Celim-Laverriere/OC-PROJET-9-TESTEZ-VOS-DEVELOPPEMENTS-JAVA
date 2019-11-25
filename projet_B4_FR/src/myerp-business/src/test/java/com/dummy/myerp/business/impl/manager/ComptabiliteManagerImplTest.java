@@ -23,6 +23,7 @@ public class ComptabiliteManagerImplTest {
     /**
      * Test nominal qui Vérifie que l'Ecriture comptable respecte les règles de gestion unitaires.
      * @see ComptabiliteManagerImpl#checkEcritureComptableUnit(EcritureComptable)
+     * @see EcritureComptable
      * @throws FunctionalException
      */
     @Test
@@ -52,6 +53,17 @@ public class ComptabiliteManagerImplTest {
     public void checkEcritureComptableUnitViolation() throws FunctionalException {
         EcritureComptable vEcritureComptable;
         vEcritureComptable = new EcritureComptable();
+        vEcritureComptable.setJournal(new JournalComptable("AC", "Achat"));
+        vEcritureComptable.setDate(new Date());
+        vEcritureComptable.setLibelle("Libelle");
+        vEcritureComptable.setReference("20-2019/00001");
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(1),
+                                                                                null, new BigDecimal(123),
+                                                                                null));
+        vEcritureComptable.getListLigneEcriture().add(new LigneEcritureComptable(new CompteComptable(2),
+                                                                                            null, null,
+                                                                                            new BigDecimal(123)));
+
         manager.checkEcritureComptableUnit(vEcritureComptable);
     }
 

@@ -69,6 +69,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         // Apple la méthode extractCurrentYear() pour extraire année de la date passé en paramètre
         Integer currentYear = extractCurrentYear(pEcritureComptable.getDate());
 
+        //  Enregistrer (update) la valeur de la séquence en persitance
         if (pEcritureComptable.getId() != null) {
 
             // Remonte depuis la persistance la dernière valeur de la séquence du journal pour l'année de l'écriture
@@ -77,14 +78,14 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                         getLastValueSequenceEcritureComptableforYear(
                                 pEcritureComptable.getJournal().getCode(), currentYear);
 
-                if(currentYear.equals(sequenceEcritureComptable.getAnnee())){
                     // Mise à jour de la dernière valeur augmentée de 1 d'écriture Comptable
                     sequenceEcritureComptable.setDerniereValeur(sequenceEcritureComptable.getDerniereValeur() + 1);
 
                     TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
-
                     try {
                         // Enregistrer (update) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
+                        /**@see com.dummy.myerp.consumer.dao.impl.db.dao.ComptabiliteDaoImpl#updateSequenceEcritureComptable(
+                         * SequenceEcritureComptable) */
                         getDaoProxy().getComptabiliteDao().updateSequenceEcritureComptable(sequenceEcritureComptable);
                         getTransactionManager().commitMyERP(vTS);
                         vTS = null;
@@ -99,13 +100,13 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                            Mettre à jour la référence de l'écriture avec la référence calculée (RG_Compta_5)
                            getDaoProxy().getComptabiliteDao().updateEcritureComptable(pEcritureComptable);
                            */
-                }
 
             } catch (Exception vEX) {
                 throw new NotFoundException("Aucune séquense n'a été trouvé !" );
             }
         }
 
+        // Enregistrer (insert) la valeur de la séquence en persitance
         if (pEcritureComptable.getId() == null) {
 
             SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().
@@ -120,7 +121,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 vSequenceEcritureComptable.setDerniereValeur(1);
 
                 TransactionStatus vTs = getTransactionManager().beginTransactionMyERP();
-
                 try {
                     // Enregistrer (insert) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
                     getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(vSequenceEcritureComptable);
@@ -132,7 +132,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
 
                 // Appel la classe formatageReference() pour formater la référence selon le RG_Compta_5
                 pEcritureComptable.setReference(formatageReference(vSequenceEcritureComptable));
-
                 /* pEcritureComptable.setDate(pEcritureComptable.getDate());
                    pEcritureComptable.setLibelle(pEcritureComptable.getLibelle());
                    Insert de la référence de l'écriture avec la référence calculée (RG_Compta_5)
@@ -205,7 +204,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         }
 
         // TODO ===== RG_Compta_5 : Format et contenu de la référence
-        // vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
+        // Vérifier que l'année dans la référence correspond bien à la date de l'écriture, idem pour le code journal...
         Integer currentYear = extractCurrentYear(pEcritureComptable.getDate());
 
         String[] referenceSplit = pEcritureComptable.getReference().split("-", 2);
@@ -247,7 +246,6 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
             } catch (NotFoundException vEx) {
                 // Dans ce cas, c'est bon, ça veut dire qu'on n'a aucune autre écriture avec la même référence.
                 // Si l'écriture à vérifier est une mise à jour (id != null)
-                // et si aucune écriture n'est trouvé (référence == null)
 
                 if(pEcritureComptable.getId() != null) {
                     throw new FunctionalException("Aucune écriture comptable existe pour cette référence.");
@@ -264,6 +262,7 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         this.checkEcritureComptable(pEcritureComptable);
         TransactionStatus vTS = getTransactionManager().beginTransactionMyERP();
         try {
+            /**@see com.dummy.myerp.consumer.dao.impl.db.dao.ComptabiliteDaoImpl#insertEcritureComptable(EcritureComptable) */
             getDaoProxy().getComptabiliteDao().insertEcritureComptable(pEcritureComptable);
             getTransactionManager().commitMyERP(vTS);
             vTS = null;

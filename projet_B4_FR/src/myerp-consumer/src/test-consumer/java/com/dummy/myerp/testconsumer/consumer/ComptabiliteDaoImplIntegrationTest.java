@@ -72,7 +72,7 @@ public class ComptabiliteDaoImplIntegrationTest extends ConsumerTestCase {
     }
 
     /**
-     * Test le déclenchement de l'exception quand aucune référence n'a été trouvé pour une écriture comptable
+     * Test le déclenchement de l'exception quand aucune référence n'a pas été trouvé pour une écriture comptable
      * @throws NotFoundException
      */
     @Test(expected = NotFoundException.class)

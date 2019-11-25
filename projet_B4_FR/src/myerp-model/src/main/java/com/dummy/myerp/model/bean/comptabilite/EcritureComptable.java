@@ -99,11 +99,11 @@ public class EcritureComptable {
      * @return {@link BigDecimal}, {@link BigDecimal#ZERO} si aucun montant au crédit
      */
     public BigDecimal getTotalCredit() {
-        BigDecimal vRetour = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP);
+        BigDecimal vRetour = BigDecimal.ZERO.setScale(2, BigDecimal.ROUND_HALF_UP); // Correction format (0,00)
 
         for (LigneEcritureComptable vLigneEcritureComptable : listLigneEcriture) {
-            if (vLigneEcritureComptable.getCredit() != null) {
-                vRetour = vRetour.add(vLigneEcritureComptable.getCredit());
+            if (vLigneEcritureComptable.getCredit() != null) { // Correction getDebit() --> getCredit()
+                vRetour = vRetour.add(vLigneEcritureComptable.getCredit()); // Correction getDebit() --> getCredit()
             }
         }
 
