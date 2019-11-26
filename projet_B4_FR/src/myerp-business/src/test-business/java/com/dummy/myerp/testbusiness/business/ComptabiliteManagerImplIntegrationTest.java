@@ -90,7 +90,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
     }
 
     /**
-     * Test le déclenchement de l'exception lors de l'insertion d'une écriture comptable
+     * Test le déclenchement de l'exception lors de l'insertion d'une écriture comptable qui exite déjà
      * @see ComptabiliteManagerImpl#insertEcritureComptable(EcritureComptable) 
      * @throws FunctionalException
      */
@@ -171,6 +171,7 @@ public class ComptabiliteManagerImplIntegrationTest extends BusinessTestCase {
 
     /**
      * Test le déclenchement de l'exception lors de la mise à jour d'une écriture comptable
+     * si Aucune écriture comptable existe pour la référence
      * @see ComptabiliteManagerImpl#updateEcritureComptable(EcritureComptable) 
      * @throws FunctionalException
      */

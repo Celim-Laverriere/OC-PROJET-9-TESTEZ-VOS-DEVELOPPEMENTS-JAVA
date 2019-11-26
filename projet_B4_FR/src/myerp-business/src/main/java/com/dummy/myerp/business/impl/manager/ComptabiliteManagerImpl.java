@@ -72,8 +72,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
         //  Enregistrer (update) la valeur de la séquence en persitance
         if (pEcritureComptable.getId() != null) {
 
-            // Remonte depuis la persistance la dernière valeur de la séquence du journal pour l'année de l'écriture
             try {
+                // Remonte depuis la persistance la dernière valeur de la séquence du journal pour l'année de l'écriture
                 SequenceEcritureComptable sequenceEcritureComptable = getDaoProxy().getComptabiliteDao().
                         getLastValueSequenceEcritureComptableforYear(
                                 pEcritureComptable.getJournal().getCode(), currentYear);
@@ -123,6 +123,8 @@ public class ComptabiliteManagerImpl extends AbstractBusinessManager implements 
                 TransactionStatus vTs = getTransactionManager().beginTransactionMyERP();
                 try {
                     // Enregistrer (insert) la valeur de la séquence en persitance (table sequence_ecriture_comptable)
+                    /**@see com.dummy.myerp.consumer.dao.impl.db.dao.ComptabiliteDaoImpl#insertSequenceEcritureComptable
+                     * (SequenceEcritureComptable) ) */
                     getDaoProxy().getComptabiliteDao().insertSequenceEcritureComptable(vSequenceEcritureComptable);
                     getTransactionManager().commitMyERP(vTs);
                     vTs = null;

@@ -169,7 +169,7 @@ public class ComptabiliteManagerImplTest {
     private TransactionManager transactionManagerMock;
 
     /**
-     * Dans la méthode setUp, je vais initialiser le mocker d'accès à la base de données pour la bypasser.
+     * Dans la méthode setUp, je vais initialiser le mock d'accès à la base de données pour la bypasser.
      * La méthode est annotée @Before pour qu'elle soit exécutée avant les tests.
      */
     @Before
